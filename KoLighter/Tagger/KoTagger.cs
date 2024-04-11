@@ -13,8 +13,8 @@ namespace KoLighter.Tagger
 	{
 		private char taggerMatchTrigger;
 
-		private List<string> taggerStartMatchList;
-		private List<string> taggerEndMatchList;
+		private char[] taggerStartMatchArray;
+		private char[] taggerEndMatchArray;
 
 		ITextView View { get; set; }
 		ITextBuffer SourceBuffer { get; set; }
@@ -26,15 +26,25 @@ namespace KoLighter.Tagger
 		{
 			taggerMatchTrigger = '<';
 
-			taggerStartMatchList = new List<string>()
+			taggerStartMatchArray = new char[]
 			{
-				"<!-- ko if:",
+				'<', '!', '-', '-', ' ', 'k', 'o', ' ', 'i', 'f', ':',
 			};
 
-			taggerEndMatchList = new List<string>()
+			taggerEndMatchArray = new char[]
 			{
-				"<!-- /ko -->",
+				'<', '!', '-', '-', ' ', '/', 'k', 'o', ' ', '-', '-', '>',
 			};
+
+			//taggerStartMatchList = new List<string>()
+			//{
+			//	"<!-- ko if:",
+			//};
+
+			//taggerEndMatchList = new List<string>()
+			//{
+			//	"<!-- /ko -->",
+			//};
 
 			View = view;
 			SourceBuffer = buffer;
@@ -100,17 +110,87 @@ namespace KoLighter.Tagger
 			var previousCharText = previousChar.GetChar();
 
 			var pairedSpan = new SnapshotSpan();
-			
+
 			if (taggerMatchTrigger == currentCharText)
 			{
-				// TODO: Check next 10 chars to confirm that this is the start of a tag. If this is the start, do search for an end tag
-				// TODO: Check next 11 chars to confirm that this is the end of a tag. If this is the end, do search for a start tag
+				if (IsCaretAtStartTag(currentChar))
+				{
+					// TODO: Walk thru and search for pair
+				}
+				else if (IsCaretAtEndTag(currentChar))
+				{
+					// TODO: Walk thru and search for pair
+				}
 			}
 			else if (taggerMatchTrigger == previousCharText)
 			{
-				// TODO: Check next 10 chars to confirm that this is the start of a tag. If this is the start, do search for an end tag
-				// TODO: Check next 11 chars to confirm that this is the end of a tag. If this is the end, do search for a start tag
+				if (IsCaretAtStartTag(previousChar))
+				{
+					// TODO: Walk thru and search for pair
+				}
+				else if (IsCaretAtEndTag(previousChar))
+				{
+					// TODO: Walk thru and search for pair
+				}
 			}
+		}
+
+		private bool IsCaretAtStartTag(SnapshotPoint startPoint)
+		{
+			var line = startPoint.GetContainingLine();
+			var lineText = line.GetText();
+			var position = startPoint.Position - line.Start.Position;
+
+			var correctCharsCount = 0;
+
+			if (position + 11 <= lineText.Length)
+			{
+				for (var i = 0; i < 11; i++)
+				{
+					if (lineText[position + i] != taggerStartMatchArray[i])
+					{
+						break;
+					}
+
+					correctCharsCount++;
+				}
+			}
+
+			if (correctCharsCount == 11)
+			{
+				return true;
+			}
+
+			return false;
+		}
+
+		private bool IsCaretAtEndTag(SnapshotPoint startPoint)
+		{
+			var line = startPoint.GetContainingLine();
+			var lineText = line.GetText();
+			var position = startPoint.Position - line.Start.Position;
+
+			var correctCharsCount = 0;
+
+			if (position + 12 <= lineText.Length)
+			{
+				for (var i = 0; i < 12; i++)
+				{
+					if (lineText[position + i] != taggerEndMatchArray[i])
+					{
+						break;
+					}
+
+					correctCharsCount++;
+				}
+			}
+
+			if (correctCharsCount == 12)
+			{
+				return true;
+			}
+
+			return false;
 		}
 	}
 }
