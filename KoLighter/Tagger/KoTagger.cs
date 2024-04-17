@@ -116,24 +116,29 @@ namespace KoLighter.Tagger
 				if (IsCaretAtStartTag(currentChar) && FindMatchingEndTag(currentChar, View.TextViewLines.Count, out pairedSpan))
 				{
 					yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(currentChar.Snapshot, 
-						currentChar.GetContainingLine().Start.Position + 1, currentChar.GetContainingLine().Length), new TextMarkerTag("blue"));
+						currentChar.GetContainingLine().Start.Position, currentChar.GetContainingLine().Length), new TextMarkerTag("blue"));
 					yield return new TagSpan<TextMarkerTag>(pairedSpan, new TextMarkerTag("blue"));
 				}
-				else if (IsCaretAtEndTag(currentChar))
+				else if (IsCaretAtEndTag(currentChar) && FindMatchingStartTag(currentChar, View.TextViewLines.Count, out pairedSpan))
 				{
+					yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(currentChar.Snapshot,
+						currentChar.GetContainingLine().Start.Position, currentChar.GetContainingLine().Length), new TextMarkerTag("blue"));
+					yield return new TagSpan<TextMarkerTag>(pairedSpan, new TextMarkerTag("blue"));
 				}
 			}
 			else if (taggerMatchTrigger == previousCharText)
 			{
-				if (IsCaretAtStartTag(previousChar) && FindMatchingEndTag(currentChar, View.TextViewLines.Count, out pairedSpan))
+				if (IsCaretAtStartTag(previousChar) && FindMatchingEndTag(previousChar, View.TextViewLines.Count, out pairedSpan))
 				{
-					yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(currentChar.Snapshot, 
-						currentChar.GetContainingLine().Start.Position + 1, currentChar.GetContainingLine().Length), new TextMarkerTag("blue"));
+					yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(previousChar.Snapshot, 
+						previousChar.GetContainingLine().Start.Position, previousChar.GetContainingLine().Length), new TextMarkerTag("blue"));
 					yield return new TagSpan<TextMarkerTag>(pairedSpan, new TextMarkerTag("blue"));
 				}
-				else if (IsCaretAtEndTag(previousChar))
+				else if (IsCaretAtEndTag(previousChar) && FindMatchingStartTag(previousChar, View.TextViewLines.Count, out pairedSpan))
 				{
-					// TODO: Walk thru and search for pair
+					yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(previousChar.Snapshot,
+						previousChar.GetContainingLine().Start.Position, previousChar.GetContainingLine().Length), new TextMarkerTag("blue"));
+					yield return new TagSpan<TextMarkerTag>(pairedSpan, new TextMarkerTag("blue"));
 				}
 			}
 		}
@@ -209,7 +214,7 @@ namespace KoLighter.Tagger
 			var line = currentChar.GetContainingLine();
 			var lineNumber = line.LineNumber;
 
-			var walkPosition = line.Start.Position + 1;
+			var walkPosition = line.Start.Position;
 			var walkStopNumber = currentChar.Snapshot.LineCount - 1;
 
 			var startTagCount = -1; // Ignore initial tag
@@ -247,7 +252,56 @@ namespace KoLighter.Tagger
 				}
 
 				line = line.Snapshot.GetLineFromLineNumber(lineNumber);
-				walkPosition = line.Start.Position + 1;
+				walkPosition = line.Start.Position;
+			}
+
+			return false;
+		}
+
+		private bool FindMatchingStartTag(SnapshotPoint currentChar, int count, out SnapshotSpan pairedSpan)
+		{
+			var line = currentChar.GetContainingLine();
+			var lineNumber = line.LineNumber;
+
+			var walkPosition = line.Start.Position;
+			var walkStopNumber = 0;
+
+			var endTagCount = -1; // Ignore initial tag
+
+			if (count > 0)
+			{
+				walkStopNumber = Math.Max(walkStopNumber, lineNumber - count);
+			}
+
+			pairedSpan = new SnapshotSpan(currentChar.Snapshot, 1, 1);
+
+			while (true)
+			{
+				if (IsCaretAtStartTag(new SnapshotPoint(currentChar.Snapshot, walkPosition)))
+				{
+					if (endTagCount > 0)
+					{
+						endTagCount--;
+					}
+					else
+					{
+						pairedSpan = new SnapshotSpan(currentChar.Snapshot, walkPosition, line.Length);
+
+						return true;
+					}
+				}
+				else if (IsCaretAtEndTag(new SnapshotPoint(currentChar.Snapshot, walkPosition)))
+				{
+					endTagCount++;
+				}
+
+				if (--lineNumber < walkStopNumber)
+				{
+					break;
+				}
+
+				line = line.Snapshot.GetLineFromLineNumber(lineNumber);
+				walkPosition = line.Start.Position;
 			}
 
 			return false;
