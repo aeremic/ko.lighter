@@ -36,16 +36,6 @@ namespace KoLighter.Tagger
 				'<', '!', '-', '-', ' ', '/', 'k', 'o', ' ', '-', '-', '>',
 			};
 
-			//taggerStartMatchList = new List<string>()
-			//{
-			//	"<!-- ko if:",
-			//};
-
-			//taggerEndMatchList = new List<string>()
-			//{
-			//	"<!-- /ko -->",
-			//};
-
 			View = view;
 			SourceBuffer = buffer;
 			CurrentChar = null;
@@ -54,6 +44,11 @@ namespace KoLighter.Tagger
 			View.LayoutChanged += ViewLayoutChanged;
 		}
 
+		/// <summary>
+		/// Event triggered on layout change.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void ViewLayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
 		{
 			// is there a really a change?
@@ -63,11 +58,20 @@ namespace KoLighter.Tagger
 			}
 		}
 
+		/// <summary>
+		/// Event triggered on caret position change.
+		/// </summary>
+		/// <param name="sender"></param>
+		/// <param name="e"></param>
 		private void CaretPositionChanged(object sender, CaretPositionChangedEventArgs e)
 		{
 			UpdateAtCaretPosition(e.NewPosition);
 		}
 
+		/// <summary>
+		/// Update caret position and trigger GetTags method.
+		/// </summary>
+		/// <param name="caretPosition"></param>
 		private void UpdateAtCaretPosition(CaretPosition caretPosition)
 		{
 			CurrentChar = caretPosition.Point.GetPoint(SourceBuffer, caretPosition.Affinity);
@@ -84,6 +88,11 @@ namespace KoLighter.Tagger
 			}
 		}
 
+		/// <summary>
+		/// ITagger method implementation.
+		/// </summary>
+		/// <param name="spans"></param>
+		/// <returns></returns>
 		public IEnumerable<ITagSpan<TextMarkerTag>> GetTags(NormalizedSnapshotSpanCollection spans)
 		{
 			// No content in buffer.
@@ -143,6 +152,11 @@ namespace KoLighter.Tagger
 			}
 		}
 
+		/// <summary>
+		/// Check if current line of a caret is a start tag.
+		/// </summary>
+		/// <param name="currentChar"></param>
+		/// <returns></returns>
 		private bool IsCaretAtStartTag(SnapshotPoint currentChar)
 		{
 			var line = currentChar.GetContainingLine();
@@ -176,6 +190,11 @@ namespace KoLighter.Tagger
 			return correctCharsCount == 11;
 		}
 
+		/// <summary>
+		/// Check if current line of a caret is a end tag.
+		/// </summary>
+		/// <param name="currentChar"></param>
+		/// <returns></returns>
 		private bool IsCaretAtEndTag(SnapshotPoint currentChar)
 		{
 			var line = currentChar.GetContainingLine();
@@ -209,6 +228,13 @@ namespace KoLighter.Tagger
 			return correctCharsCount == 12;
 		}
 
+		/// <summary>
+		/// Try finding the end tag based on the current snapshot point.
+		/// </summary>
+		/// <param name="currentChar"></param>
+		/// <param name="count"></param>
+		/// <param name="pairedSpan"></param>
+		/// <returns></returns>
 		private bool FindMatchingEndTag(SnapshotPoint currentChar, int count, out SnapshotSpan pairedSpan)
 		{
 			var line = currentChar.GetContainingLine();
@@ -258,6 +284,13 @@ namespace KoLighter.Tagger
 			return false;
 		}
 
+		/// <summary>
+		/// Try finding the start tag based on the current snapshot point.
+		/// </summary>
+		/// <param name="currentChar"></param>
+		/// <param name="count"></param>
+		/// <param name="pairedSpan"></param>
+		/// <returns></returns>
 		private bool FindMatchingStartTag(SnapshotPoint currentChar, int count, out SnapshotSpan pairedSpan)
 		{
 			var line = currentChar.GetContainingLine();
