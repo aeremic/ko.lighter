@@ -113,20 +113,23 @@ namespace KoLighter.Tagger
 
 			if (taggerMatchTrigger == currentCharText)
 			{
-				if (IsCaretAtStartTag(currentChar))
+				if (IsCaretAtStartTag(currentChar) && FindMatchingEndTag(currentChar, View.TextViewLines.Count, out pairedSpan))
 				{
-					// TODO: Walk thru and search for pair
+					yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(currentChar.Snapshot, 
+						currentChar.GetContainingLine().Start.Position + 1, currentChar.GetContainingLine().Length), new TextMarkerTag("blue"));
+					yield return new TagSpan<TextMarkerTag>(pairedSpan, new TextMarkerTag("blue"));
 				}
 				else if (IsCaretAtEndTag(currentChar))
 				{
-					// TODO: Walk thru and search for pair
 				}
 			}
 			else if (taggerMatchTrigger == previousCharText)
 			{
-				if (IsCaretAtStartTag(previousChar))
+				if (IsCaretAtStartTag(previousChar) && FindMatchingEndTag(currentChar, View.TextViewLines.Count, out pairedSpan))
 				{
-					// TODO: Walk thru and search for pair
+					yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(currentChar.Snapshot, 
+						currentChar.GetContainingLine().Start.Position + 1, currentChar.GetContainingLine().Length), new TextMarkerTag("blue"));
+					yield return new TagSpan<TextMarkerTag>(pairedSpan, new TextMarkerTag("blue"));
 				}
 				else if (IsCaretAtEndTag(previousChar))
 				{
@@ -135,59 +138,116 @@ namespace KoLighter.Tagger
 			}
 		}
 
-		private bool IsCaretAtStartTag(SnapshotPoint startPoint)
+		private bool IsCaretAtStartTag(SnapshotPoint currentChar)
 		{
-			var line = startPoint.GetContainingLine();
+			var line = currentChar.GetContainingLine();
 			var lineText = line.GetText();
-			var position = startPoint.Position - line.Start.Position;
 
 			var correctCharsCount = 0;
 
-			if (position + 11 <= lineText.Length)
+			if (lineText.Length > 11)
 			{
-				for (var i = 0; i < 11; i++)
+				var increment = 0;
+				while (increment < lineText.Length)
 				{
-					if (lineText[position + i] != taggerStartMatchArray[i])
+					if (lineText[increment] == taggerStartMatchArray[correctCharsCount])
+					{
+						correctCharsCount++;
+					}
+					else
+					{
+						correctCharsCount = 0;
+					}
+
+					if (correctCharsCount == 11)
 					{
 						break;
 					}
 
-					correctCharsCount++;
+					increment++;
 				}
 			}
 
-			if (correctCharsCount == 11)
-			{
-				return true;
-			}
-
-			return false;
+			return correctCharsCount == 11;
 		}
 
-		private bool IsCaretAtEndTag(SnapshotPoint startPoint)
+		private bool IsCaretAtEndTag(SnapshotPoint currentChar)
 		{
-			var line = startPoint.GetContainingLine();
+			var line = currentChar.GetContainingLine();
 			var lineText = line.GetText();
-			var position = startPoint.Position - line.Start.Position;
 
 			var correctCharsCount = 0;
 
-			if (position + 12 <= lineText.Length)
+			if (lineText.Length > 12)
 			{
-				for (var i = 0; i < 12; i++)
+				var increment = 0;
+				while (increment < lineText.Length)
 				{
-					if (lineText[position + i] != taggerEndMatchArray[i])
+					if (lineText[increment] == taggerEndMatchArray[correctCharsCount])
+					{
+						correctCharsCount++;
+					}
+					else
+					{
+						correctCharsCount = 0;
+					}
+
+					if (correctCharsCount == 12)
 					{
 						break;
 					}
 
-					correctCharsCount++;
+					increment++;
 				}
 			}
 
-			if (correctCharsCount == 12)
+			return correctCharsCount == 12;
+		}
+
+		private bool FindMatchingEndTag(SnapshotPoint currentChar, int count, out SnapshotSpan pairedSpan)
+		{
+			var line = currentChar.GetContainingLine();
+			var lineNumber = line.LineNumber;
+
+			var walkPosition = line.Start.Position + 1;
+			var walkStopNumber = currentChar.Snapshot.LineCount - 1;
+
+			var startTagCount = -1; // Ignore initial tag
+
+			if(count > 0)
 			{
-				return true;
+				walkStopNumber = Math.Min(walkStopNumber, lineNumber + count);
+			}
+
+			pairedSpan = new SnapshotSpan(currentChar.Snapshot, 1, 1);
+
+			while (true)
+			{
+				if (IsCaretAtEndTag(new SnapshotPoint(currentChar.Snapshot, walkPosition)))
+				{
+					if (startTagCount > 0)
+					{
+						startTagCount--;
+					}
+					else
+					{
+						pairedSpan = new SnapshotSpan(currentChar.Snapshot, walkPosition, line.Length);
+
+						return true;
+					}
+				}
+				else if (IsCaretAtStartTag(new SnapshotPoint(currentChar.Snapshot, walkPosition)))
+				{
+					startTagCount++;
+				}
+
+				if (++lineNumber > walkStopNumber)
+				{
+					break;
+				}
+
+				line = line.Snapshot.GetLineFromLineNumber(lineNumber);
+				walkPosition = line.Start.Position + 1;
 			}
 
 			return false;
