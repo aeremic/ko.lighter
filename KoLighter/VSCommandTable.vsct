@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<CommandTable xmlns="http://schemas.microsoft.com/VisualStudio/2005-10-18/CommandTable" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+  <Extern href="stdidcmd.h"/>
+  <Extern href="vsshlids.h"/>
+  <Include href="KnownImageIds.vsct"/>
+  <Include href="VSGlobals.vsct"/>
+
+  <Commands package="KoLighter">
+  </Commands>
+
+  <Symbols>
+    <GuidSymbol name="KoLighter" value="{f15ea669-611a-45f6-bb62-856f678183d3}">
+      
+    </GuidSymbol>
+  </Symbols>
+</CommandTable>

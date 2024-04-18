@@ -124,7 +124,7 @@ namespace KoLighter.Tagger
 			{
 				if (IsCaretAtStartTag(currentChar) && FindMatchingEndTag(currentChar, View.TextViewLines.Count, out pairedSpan))
 				{
-					yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(currentChar.Snapshot, 
+					yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(currentChar.Snapshot,
 						currentChar.GetContainingLine().Start.Position, currentChar.GetContainingLine().Length), new TextMarkerTag("blue"));
 					yield return new TagSpan<TextMarkerTag>(pairedSpan, new TextMarkerTag("blue"));
 				}
@@ -139,7 +139,7 @@ namespace KoLighter.Tagger
 			{
 				if (IsCaretAtStartTag(previousChar) && FindMatchingEndTag(previousChar, View.TextViewLines.Count, out pairedSpan))
 				{
-					yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(previousChar.Snapshot, 
+					yield return new TagSpan<TextMarkerTag>(new SnapshotSpan(previousChar.Snapshot,
 						previousChar.GetContainingLine().Start.Position, previousChar.GetContainingLine().Length), new TextMarkerTag("blue"));
 					yield return new TagSpan<TextMarkerTag>(pairedSpan, new TextMarkerTag("blue"));
 				}
@@ -245,7 +245,7 @@ namespace KoLighter.Tagger
 
 			var startTagCount = -1; // Ignore initial tag
 
-			if(count > 0)
+			if (count > 0)
 			{
 				walkStopNumber = Math.Min(walkStopNumber, lineNumber + count);
 			}

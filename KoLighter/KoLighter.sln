@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33213.308
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KoLighter", "KoLighter.csproj", "{34D22B9E-0FBE-476B-A8DF-CD399BCFAB8C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KoLighter", "KoLighter.csproj", "{929F3557-A3CC-4FAD-9037-523EF5F6D43C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,23 +15,23 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{34D22B9E-0FBE-476B-A8DF-CD399BCFAB8C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{34D22B9E-0FBE-476B-A8DF-CD399BCFAB8C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{34D22B9E-0FBE-476B-A8DF-CD399BCFAB8C}.Debug|arm64.ActiveCfg = Debug|arm64
-		{34D22B9E-0FBE-476B-A8DF-CD399BCFAB8C}.Debug|arm64.Build.0 = Debug|arm64
-		{34D22B9E-0FBE-476B-A8DF-CD399BCFAB8C}.Debug|x86.ActiveCfg = Debug|x86
-		{34D22B9E-0FBE-476B-A8DF-CD399BCFAB8C}.Debug|x86.Build.0 = Debug|x86
-		{34D22B9E-0FBE-476B-A8DF-CD399BCFAB8C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{34D22B9E-0FBE-476B-A8DF-CD399BCFAB8C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{34D22B9E-0FBE-476B-A8DF-CD399BCFAB8C}.Release|arm64.ActiveCfg = Release|arm64
-		{34D22B9E-0FBE-476B-A8DF-CD399BCFAB8C}.Release|arm64.Build.0 = Release|arm64
-		{34D22B9E-0FBE-476B-A8DF-CD399BCFAB8C}.Release|x86.ActiveCfg = Release|x86
-		{34D22B9E-0FBE-476B-A8DF-CD399BCFAB8C}.Release|x86.Build.0 = Release|x86
+		{929F3557-A3CC-4FAD-9037-523EF5F6D43C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{929F3557-A3CC-4FAD-9037-523EF5F6D43C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{929F3557-A3CC-4FAD-9037-523EF5F6D43C}.Debug|arm64.ActiveCfg = Debug|arm64
+		{929F3557-A3CC-4FAD-9037-523EF5F6D43C}.Debug|arm64.Build.0 = Debug|arm64
+		{929F3557-A3CC-4FAD-9037-523EF5F6D43C}.Debug|x86.ActiveCfg = Debug|x86
+		{929F3557-A3CC-4FAD-9037-523EF5F6D43C}.Debug|x86.Build.0 = Debug|x86
+		{929F3557-A3CC-4FAD-9037-523EF5F6D43C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{929F3557-A3CC-4FAD-9037-523EF5F6D43C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{929F3557-A3CC-4FAD-9037-523EF5F6D43C}.Release|arm64.ActiveCfg = Release|arm64
+		{929F3557-A3CC-4FAD-9037-523EF5F6D43C}.Release|arm64.Build.0 = Release|arm64
+		{929F3557-A3CC-4FAD-9037-523EF5F6D43C}.Release|x86.ActiveCfg = Release|x86
+		{929F3557-A3CC-4FAD-9037-523EF5F6D43C}.Release|x86.Build.0 = Release|x86
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
-		SolutionGuid = {EBB8E9D1-A8A7-4B77-861D-37D5297EDE74}
+		SolutionGuid = {9AC33D14-3AE3-45B3-AC37-48FA1081DE0F}
 	EndGlobalSection
 EndGlobal
