@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.Text;
+﻿using KoLighter.Common;
+using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Tagging;
 using System;
@@ -11,12 +12,8 @@ namespace KoLighter.Tagger
 {
 	internal class KoTagger : ITagger<TextMarkerTag>
 	{
-		private bool isEnabled;
-
-		private char taggerMatchTrigger;
-
-		private char[] taggerStartMatchArray;
-		private char[] taggerEndMatchArray;
+		private readonly bool _isEnabled;
+		private readonly char _taggerMatchTrigger;
 
 		ITextView View { get; set; }
 		ITextBuffer SourceBuffer { get; set; }
@@ -26,19 +23,8 @@ namespace KoLighter.Tagger
 
 		internal KoTagger(ITextView view, ITextBuffer buffer)
 		{
-			isEnabled = IsEnabled(General.Instance);
-
-			taggerMatchTrigger = '<';
-
-			taggerStartMatchArray = new char[]
-			{
-				'<', '!', '-', '-', ' ', 'k', 'o', ' ', 'i', 'f', ':',
-			};
-
-			taggerEndMatchArray = new char[]
-			{
-				'<', '!', '-', '-', ' ', '/', 'k', 'o', ' ', '-', '-', '>',
-			};
+			_isEnabled = IsEnabled(General.Instance);
+			_taggerMatchTrigger = '<';
 
 			View = view;
 			SourceBuffer = buffer;
@@ -48,6 +34,11 @@ namespace KoLighter.Tagger
 			View.LayoutChanged += ViewLayoutChanged;
 		}
 
+		/// <summary>
+		/// Is enabled value field.
+		/// </summary>
+		/// <param name="settings"></param>
+		/// <returns></returns>
 		private static bool IsEnabled(General settings) => settings.IsEnabled;
 
 		/// <summary>
@@ -57,7 +48,7 @@ namespace KoLighter.Tagger
 		/// <param name="e"></param>
 		private void ViewLayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
 		{
-			if (!isEnabled)
+			if (!_isEnabled)
 			{
 				return;
 			}
@@ -76,7 +67,7 @@ namespace KoLighter.Tagger
 		/// <param name="e"></param>
 		private void CaretPositionChanged(object sender, CaretPositionChangedEventArgs e)
 		{
-			if (!isEnabled)
+			if (!_isEnabled)
 			{
 				return;
 			}
@@ -136,7 +127,7 @@ namespace KoLighter.Tagger
 
 			var pairedSpan = new SnapshotSpan();
 
-			if (taggerMatchTrigger == currentCharText)
+			if (_taggerMatchTrigger == currentCharText)
 			{
 				if (IsCaretAtStartTag(currentChar) && FindMatchingEndTag(currentChar, View.TextViewLines.Count, out pairedSpan))
 				{
@@ -151,7 +142,7 @@ namespace KoLighter.Tagger
 					yield return new TagSpan<TextMarkerTag>(pairedSpan, new TextMarkerTag("blue"));
 				}
 			}
-			else if (taggerMatchTrigger == previousCharText)
+			else if (_taggerMatchTrigger == previousCharText)
 			{
 				if (IsCaretAtStartTag(previousChar) && FindMatchingEndTag(previousChar, View.TextViewLines.Count, out pairedSpan))
 				{
@@ -176,34 +167,9 @@ namespace KoLighter.Tagger
 		private bool IsCaretAtStartTag(SnapshotPoint currentChar)
 		{
 			var line = currentChar.GetContainingLine();
-			var lineText = line.GetText();
+			var lineText = RemoveWhiteSpaces(line.GetText());
 
-			var correctCharsCount = 0;
-
-			if (lineText.Length > 11)
-			{
-				var increment = 0;
-				while (increment < lineText.Length)
-				{
-					if (lineText[increment] == taggerStartMatchArray[correctCharsCount])
-					{
-						correctCharsCount++;
-					}
-					else
-					{
-						correctCharsCount = 0;
-					}
-
-					if (correctCharsCount == 11)
-					{
-						break;
-					}
-
-					increment++;
-				}
-			}
-
-			return correctCharsCount == 11;
+			return lineText.Contains(Constants.KoStartTag);
 		}
 
 		/// <summary>
@@ -214,34 +180,9 @@ namespace KoLighter.Tagger
 		private bool IsCaretAtEndTag(SnapshotPoint currentChar)
 		{
 			var line = currentChar.GetContainingLine();
-			var lineText = line.GetText();
+			var lineText = RemoveWhiteSpaces(line.GetText());
 
-			var correctCharsCount = 0;
-
-			if (lineText.Length > 12)
-			{
-				var increment = 0;
-				while (increment < lineText.Length)
-				{
-					if (lineText[increment] == taggerEndMatchArray[correctCharsCount])
-					{
-						correctCharsCount++;
-					}
-					else
-					{
-						correctCharsCount = 0;
-					}
-
-					if (correctCharsCount == 12)
-					{
-						break;
-					}
-
-					increment++;
-				}
-			}
-
-			return correctCharsCount == 12;
+			return lineText.Contains(Constants.KoEndTag);
 		}
 
 		/// <summary>
@@ -354,6 +295,16 @@ namespace KoLighter.Tagger
 			}
 
 			return false;
+		}
+
+		/// <summary>
+		/// Method for removing all whitespaces from given string.
+		/// </summary>
+		/// <param name="source"></param>
+		/// <returns></returns>
+		private string RemoveWhiteSpaces(string source)
+		{
+			return new string(source.Where(c => !char.IsWhiteSpace(c)).ToArray());
 		}
 	}
 }
