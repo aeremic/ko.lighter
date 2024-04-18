@@ -14,7 +14,7 @@ namespace KoLighter
 	public class General : BaseOptionModel<General>
 	{
 		[Category("General")]
-		[DisplayName("Enable Ko.Lighter")]
+		[DisplayName("Enable KoLighter")]
 		[Description("Allows you to enable/disable Knockout JS highlighting.")]
 		[DefaultValue(true)]
 		public bool IsEnabled { get; set; } = true;
