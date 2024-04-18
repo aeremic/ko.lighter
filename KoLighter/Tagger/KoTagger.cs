@@ -11,6 +11,8 @@ namespace KoLighter.Tagger
 {
 	internal class KoTagger : ITagger<TextMarkerTag>
 	{
+		private bool isEnabled;
+
 		private char taggerMatchTrigger;
 
 		private char[] taggerStartMatchArray;
@@ -24,6 +26,8 @@ namespace KoLighter.Tagger
 
 		internal KoTagger(ITextView view, ITextBuffer buffer)
 		{
+			isEnabled = IsEnabled(General.Instance);
+
 			taggerMatchTrigger = '<';
 
 			taggerStartMatchArray = new char[]
@@ -44,6 +48,8 @@ namespace KoLighter.Tagger
 			View.LayoutChanged += ViewLayoutChanged;
 		}
 
+		private static bool IsEnabled(General settings) => settings.IsEnabled;
+
 		/// <summary>
 		/// Event triggered on layout change.
 		/// </summary>
@@ -51,6 +57,11 @@ namespace KoLighter.Tagger
 		/// <param name="e"></param>
 		private void ViewLayoutChanged(object sender, TextViewLayoutChangedEventArgs e)
 		{
+			if (!isEnabled)
+			{
+				return;
+			}
+
 			// is there a really a change?
 			if (e.NewSnapshot != e.OldSnapshot)
 			{
@@ -65,6 +76,11 @@ namespace KoLighter.Tagger
 		/// <param name="e"></param>
 		private void CaretPositionChanged(object sender, CaretPositionChangedEventArgs e)
 		{
+			if (!isEnabled)
+			{
+				return;
+			}
+
 			UpdateAtCaretPosition(e.NewPosition);
 		}
 

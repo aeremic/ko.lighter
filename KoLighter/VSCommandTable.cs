@@ -20,5 +20,6 @@ namespace KoLighter
 	/// </summary>
 	internal sealed partial class PackageIds
 	{
+		public const int Toggle = 0x000A;
 	}
 }
