@@ -1,4 +1,5 @@
 ﻿using KoLighter.Common;
+using KoLighter.Extensions;
 using Microsoft.VisualStudio.Text;
 using Microsoft.VisualStudio.Text.Editor;
 using Microsoft.VisualStudio.Text.Tagging;
@@ -167,7 +168,7 @@ namespace KoLighter.Tagger
 		private bool IsCaretAtStartTag(SnapshotPoint currentChar)
 		{
 			var line = currentChar.GetContainingLine();
-			var lineText = RemoveWhiteSpaces(line.GetText());
+			var lineText = line.GetText().RemoveWhiteSpaces();
 
 			return lineText.Contains(Constants.KoIfStartTag) || lineText.Contains(Constants.KoIfNotStartTag);
 		}
@@ -180,7 +181,7 @@ namespace KoLighter.Tagger
 		private bool IsCaretAtEndTag(SnapshotPoint currentChar)
 		{
 			var line = currentChar.GetContainingLine();
-			var lineText = RemoveWhiteSpaces(line.GetText());
+			var lineText = line.GetText().RemoveWhiteSpaces();
 
 			return lineText.Contains(Constants.KoEndTag);
 		}
@@ -285,16 +286,6 @@ namespace KoLighter.Tagger
 			}
 
 			return false;
-		}
-
-		/// <summary>
-		/// Method for removing all whitespaces from given string.
-		/// </summary>
-		/// <param name="source"></param>
-		/// <returns></returns>
-		private string RemoveWhiteSpaces(string source)
-		{
-			return new string(source.Where(c => !char.IsWhiteSpace(c)).ToArray());
 		}
 	}
 }
