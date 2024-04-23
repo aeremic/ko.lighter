@@ -1,4 +1,4 @@
-### Download this extension from the Visual Studio Marketplace.<br/> ###
+### Download this extension from the [Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=AndrijaEremic.kolighter).<br/> ###
 A Visual Studio plugin that highlights KnockoutJS syntax in Razor pages for easier coding.
 
 Example: </br>
