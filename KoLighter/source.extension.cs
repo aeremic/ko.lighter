@@ -11,8 +11,8 @@ namespace KoLighter
         public const string Name = "KoLighter";
         public const string Description = @"A Visual Studio plugin that highlights KnockoutJS syntax in Razor pages for easier coding.";
         public const string Language = "en-US";
-        public const string Version = "1.0";
+        public const string Version = "1.0.2";
         public const string Author = "Andrija Eremic";
-        public const string Tags = "";
+        public const string Tags = "KnockoutJS, Knockout, ASP.NET MVC";
     }
 }
