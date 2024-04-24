@@ -10,6 +10,8 @@ namespace KoLighter.Common
 	{
 		public static string KoIfStartTag = "<!--koif:";
 		public static string KoIfNotStartTag = "<!--koifnot:";
+		public static string KoTemplateStartTag = "<!--kotemplate:";
+		public static string KoForEachStartTag = "<!--koforeach:";
 		public static string KoEndTag = "<!--/ko-->";
 	}
 }
