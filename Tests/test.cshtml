@@ -1,0 +1,80 @@
+<div>
+    <title></title>
+    <div>
+		<!-- ko if: main condition -->
+        paragraph
+        <!-- ko if: condition -->
+        guarded first
+        <!-- ko if: condition2 -->
+        <!-- ko    if: condition2 -->
+        <!-- ko if: condition2 -->
+        guarded3
+        <!-- /ko -->
+        guarded2
+        <!-- /ko -->
+        guarded
+        <!-- /ko -->
+        <!-- /ko -->
+
+
+            <!-- ko if: condition -->
+            guarded
+            <!-- /ko -->
+			
+			<!-- ko let: { abc: 'xyz' } --> 
+			<!-- ko if: condition -->
+            guarded
+            <!-- /ko -->
+			<!-- /ko -->
+
+        
+            <!-- ko ifnot: condition -->
+            guarded
+		
+			<!-- ko foreach: $data.items-->
+			<!--ko template: name -->
+			<!--/ko-->
+			<!--/ko-->
+
+            <!-- /ko -->
+        
+<!-- ko if: condition -->
+        guarded
+        <!-- /ko -->
+
+		text
+		text
+		text
+		text
+		text
+		text
+		text
+		text
+		text
+		texttext
+		text
+		text
+		text
+		text
+		text
+		text
+		text
+		texttext
+		text
+		text
+		text
+		text
+		text
+		text
+		text
+		texttext
+		text
+		text
+		text
+		text
+		text
+		text
+		text
+		<!-- /ko -->
+	</div>
+</div>

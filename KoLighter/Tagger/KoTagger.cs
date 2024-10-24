@@ -171,7 +171,8 @@ namespace KoLighter.Tagger
 			var lineText = line.GetText().RemoveWhiteSpaces();
 
 			return lineText.Contains(Constants.KoIfStartTag) || lineText.Contains(Constants.KoIfNotStartTag) 
-				|| lineText.Contains(Constants.KoTemplateStartTag) || lineText.Contains(Constants.KoForEachStartTag);
+				|| lineText.Contains(Constants.KoTemplateStartTag) || lineText.Contains(Constants.KoForEachStartTag)
+				|| lineText.Contains(Constants.KoLetTag);
 		}
 
 		/// <summary>
